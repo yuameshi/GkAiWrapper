@@ -1,5 +1,6 @@
 import {StyleSheet, View} from 'react-native';
 import {Thoughts} from './Thoughts';
+import {ResponseFullText} from './FullText';
 
 export const Session = () => {
 	return (
@@ -10,6 +11,7 @@ export const Session = () => {
 					'Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti exercitationem repudiandae excepturi ut perferendis, corporis ea quod tenetur vero perspiciatis minima sunt ex eaque consequatur quia quibusdam mollitia, accusantium voluptas?'
 				}
 			/>
+			<ResponseFullText />
 		</View>
 	);
 };
