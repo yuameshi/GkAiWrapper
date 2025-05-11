@@ -5,14 +5,26 @@ import {InputBox} from './components/InputBox';
 import {useEffect, useState} from 'react';
 import {createSession} from './api/create-session';
 
+type Message = {
+	id: number;
+	content: string;
+	thoughts?: string;
+	seconds?: number;
+	sender: 'user' | 'assistant';
+};
+
 function App() {
-	const [inputDisabled, setInputDisabled] = useState(false);
+	const [inputDisabled, setInputDisabled] = useState(true);
+	const [id, setId] = useState<number | null>(null);
 	const [sessionId, setSessionId] = useState<string | null>(null);
+	const [loading, setLoading] = useState(false);
+	const [messages, setMessages] = useState<Message[]>([]);
 
 	useEffect(() => {
 		createSession()
 			.then(res => {
 				if (res.code === 1) {
+					setId(res.data.id);
 					setSessionId(res.data.sessionId);
 					setInputDisabled(false);
 				} else {
@@ -31,8 +43,20 @@ function App() {
 	return (
 		<View style={[styles.root]}>
 			<ScrollView style={styles.scrollView}>
-				<UserPrompt />
-				<Session />
+				{messages.map((msg, index) => (
+					<View key={index}>
+						{msg.sender === 'user' ? (
+							<UserPrompt content={msg.content} />
+						) : (
+							<Session
+								content={msg.content}
+								thoughts={msg.thoughts || ''}
+								seconds={msg.seconds || 0}
+								loading={false}
+							/>
+						)}
+					</View>
+				))}
 			</ScrollView>
 			<InputBox
 				disabled={inputDisabled}
