@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {Session} from './components/Response';
 import {UserPrompt} from './components/UserPrompt';
 import {InputBox} from './components/InputBox';
@@ -6,10 +6,10 @@ import {InputBox} from './components/InputBox';
 function App() {
 	return (
 		<View style={[styles.root]}>
-			<UserPrompt />
-			<Session />
-			<UserPrompt />
-			<Session />
+			<ScrollView style={styles.scrollView}>
+				<UserPrompt />
+				<Session />
+			</ScrollView>
 			<InputBox
 				placeholder="Type your message here..."
 				onSubmit={value => {
@@ -25,6 +25,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	scrollView: {
+		flexShrink: 1,
+		width: '100%',
+		paddingHorizontal: 16,
 	},
 });
 
