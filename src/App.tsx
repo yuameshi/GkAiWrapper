@@ -40,6 +40,37 @@ function App() {
 			});
 	}, []);
 
+	const handleSubmit = (value: string) => {
+		if (!id || !sessionId) {
+			Alert.alert('会话未创建', '请稍后再试');
+			return;
+		}
+		setLoading(true);
+		setMessages(prev => [
+			...prev,
+			{
+				id: id,
+				content: value,
+				sender: 'user',
+			},
+		]);
+		// Simulate sending a message
+		setTimeout(() => {
+			// Simulate receiving a response
+			setMessages(prev => [
+				...prev,
+				{
+					id: id,
+					content: '这是一个模拟的响应',
+					thoughts: '思考内容',
+					seconds: 2,
+					sender: 'assistant',
+				},
+			]);
+			setLoading(false);
+		}, 2000);
+	};
+
 	return (
 		<View style={[styles.root]}>
 			<ScrollView style={styles.scrollView}>
@@ -58,12 +89,7 @@ function App() {
 					</View>
 				))}
 			</ScrollView>
-			<InputBox
-				disabled={inputDisabled}
-				onSubmit={value => {
-					console.log('Submitted:', value);
-				}}
-			/>
+			<InputBox disabled={inputDisabled} onSubmit={handleSubmit} />
 		</View>
 	);
 }
