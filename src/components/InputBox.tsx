@@ -9,15 +9,10 @@ import {
 
 type TextInputProps = {
 	disabled?: boolean;
-	placeholder?: string;
 	onSubmit: (value: string) => void;
 };
 
-export const InputBox: FC<TextInputProps> = ({
-	disabled,
-	placeholder,
-	onSubmit,
-}) => {
+export const InputBox: FC<TextInputProps> = ({disabled, onSubmit}) => {
 	const [value, setValue] = useState<string>('');
 	const disabledInternal = disabled || !value.trim();
 
@@ -39,7 +34,7 @@ export const InputBox: FC<TextInputProps> = ({
 				value={value}
 				onChangeText={handleChange}
 				onSubmitEditing={handleSubmit}
-				placeholder={placeholder}
+				placeholder="有问题，尽管问我吧"
 				editable={!disabled}
 			/>
 			<TouchableOpacity
