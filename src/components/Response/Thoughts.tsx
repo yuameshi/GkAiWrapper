@@ -25,11 +25,13 @@ export const Thoughts: FC<ThoughtsProps> = ({seconds, thoughts, loading}) => {
 					{loading ? (
 						<>
 							<ActivityIndicator />
-							<Text style={styles.text}>已思考 {seconds} 秒</Text>
+							<Text style={styles.text}>
+								正在思考，已思考 {seconds} 秒
+							</Text>
 						</>
 					) : (
 						<Text style={styles.text}>
-							思考完毕，用时{seconds}秒（按此以
+							思考完毕，用时 {seconds} 秒（按此以
 							{expanded ? '收起' : '展开'}
 							思考过程）
 						</Text>
