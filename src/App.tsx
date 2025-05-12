@@ -5,6 +5,7 @@ import {InputBox} from './components/InputBox';
 import {useEffect, useState} from 'react';
 import {createSession} from './api/create-session';
 import {chat} from './api/chat';
+import {getTime} from './utils/getTime';
 
 type Message = {
 	content: string;
@@ -20,7 +21,6 @@ function App() {
 	const [loading, setLoading] = useState(false);
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [activeMessage, setActiveMessage] = useState<Message | null>(null);
-	const [loadStartTime, setLoadStartTime] = useState<number | null>(null);
 
 	useEffect(() => {
 		createSession()
@@ -54,7 +54,6 @@ function App() {
 		}
 		setInputDisabled(true);
 		setLoading(true);
-		setLoadStartTime(Date.now());
 		setMessages(prev => [
 			...prev,
 			{
@@ -63,7 +62,10 @@ function App() {
 				sender: 'user',
 			},
 		]);
+		const loadStartTime = getTime();
 		const timer = setInterval(() => {
+			console.log('now', getTime());
+			console.log('delta', getTime() - (loadStartTime || 0));
 			setActiveMessage({
 				content: '请稍后...',
 				seconds: Math.floor((Date.now() - (loadStartTime || 0)) / 1000),
@@ -79,7 +81,7 @@ function App() {
 					{
 						content: msg.output.text,
 						seconds: Math.floor(
-							(Date.now() - (loadStartTime || 0)) / 1000,
+							(getTime() - (loadStartTime || 0)) / 1000,
 						),
 						thoughts: msg.output.thoughts.find(
 							t => t.action_type === 'reasoning',
