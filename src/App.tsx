@@ -2,7 +2,7 @@ import {Alert} from 'react-native';
 import {useEffect, useState} from 'react';
 import {createSession} from './api/create-session';
 import {Main} from './pages/Main';
-import {getToken,setToken as setStoredToken} from './store/token';
+import {getToken, setToken as setStoredToken} from './store/token';
 import {Login} from './pages/Login';
 
 function App() {
@@ -44,7 +44,11 @@ function App() {
 			});
 	}, [token]);
 
-	return id && sessionId ? <Main id={id} sessionId={sessionId} /> : <Login />;
+	return id && sessionId ? (
+		<Main id={id} sessionId={sessionId} />
+	) : (
+		<Login setToken={setToken} />
+	);
 }
 
 export default App;

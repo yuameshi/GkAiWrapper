@@ -2,7 +2,7 @@ import {Alert, ScrollView, StyleSheet, View} from 'react-native';
 import {Session} from '../components/Response';
 import {UserPrompt} from '../components/UserPrompt';
 import {InputBox} from '../components/InputBox';
-import {type FC, useRef, useState} from 'react';
+import {type FC, useEffect, useRef, useState} from 'react';
 import {chat} from '../api/chat';
 import {getTime} from '../utils/getTime';
 
@@ -24,6 +24,15 @@ export const Main: FC<MainPageProps> = ({id, sessionId}) => {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [activeMessage, setActiveMessage] = useState<Message | null>(null);
 	const scrollViewRef = useRef<ScrollView>(null);
+
+	useEffect(() => {
+		if (!id || !sessionId) {
+			setInputDisabled(true);
+			return;
+		} else {
+			setInputDisabled(false);
+		}
+	}, [id, sessionId]);
 
 	const handleSubmit = (value: string) => {
 		if (!id || !sessionId) {

@@ -1,4 +1,10 @@
-import {useEffect, useState} from 'react';
+import {
+	type Dispatch,
+	type FC,
+	type SetStateAction,
+	useEffect,
+	useState,
+} from 'react';
 import {
 	Alert,
 	Button,
@@ -15,7 +21,11 @@ import {CheckTicketApi} from '../api/login/check-ticket';
 import {LoginQrCodeApi} from '../api/login/login-qrcode';
 import {setToken as setStoredToken} from '../store/token';
 
-export const Login = () => {
+type LoginPageProps = {
+	setToken: Dispatch<SetStateAction<string | null>>;
+};
+
+export const Login: FC<LoginPageProps> = ({setToken}) => {
 	const [client, setClient] = useState<string | null>(null);
 	const [qrCode, setQrCode] = useState<string | null>(null);
 	const [ticket, setTicket] = useState<string | null>(null);
@@ -58,12 +68,16 @@ export const Login = () => {
 		if (!ticket) {
 			return;
 		}
+		if (!setToken) {
+			return;
+		}
 		CheckPasswordApi(ticket)
 			.then(() => CheckTicketApi(ticket))
 			.then(() => LoginQrCodeApi(ticket))
 			.then(token => {
 				console.log('Login success: ', token.slice(0, 10) + '...');
 				setStoredToken(token);
+				setToken(token);
 			})
 			.catch(err => {
 				console.error('Login error:', err);
@@ -73,7 +87,7 @@ export const Login = () => {
 				);
 			});
 		return;
-	}, [ticket]);
+	}, [ticket, setToken]);
 
 	useEffect(() => {
 		if (!client) {
