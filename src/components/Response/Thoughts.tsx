@@ -22,11 +22,18 @@ export const Thoughts: FC<ThoughtsProps> = ({seconds, thoughts, loading}) => {
 		<View style={styles.container}>
 			<TouchableOpacity onPress={toggleExpanded}>
 				<View style={[styles.brief]}>
-					{loading && <ActivityIndicator />}
-					<Text style={styles.text}>
-						已思考 {seconds} 秒（按此以{expanded ? '收起' : '展开'}
-						思考过程）
-					</Text>
+					{loading ? (
+						<>
+							<ActivityIndicator />{' '}
+							<Text style={styles.text}>已思考 {seconds} 秒</Text>
+						</>
+					) : (
+						<Text style={styles.text}>
+							思考完毕，用时{seconds}秒（按此以
+							{expanded ? '收起' : '展开'}
+							思考过程）
+						</Text>
+					)}
 				</View>
 			</TouchableOpacity>
 			<Text
