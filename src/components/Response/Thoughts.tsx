@@ -24,7 +24,7 @@ export const Thoughts: FC<ThoughtsProps> = ({seconds, thoughts, loading}) => {
 				<View style={[styles.brief]}>
 					{loading ? (
 						<>
-							<ActivityIndicator />{' '}
+							<ActivityIndicator />
 							<Text style={styles.text}>已思考 {seconds} 秒</Text>
 						</>
 					) : (
