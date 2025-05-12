@@ -24,6 +24,11 @@ function App() {
 		createSession()
 			.then(res => {
 				if (res.code === 1) {
+					console.log(
+						'Session created:',
+						res.data.id,
+						res.data.sessionId,
+					);
 					setId(res.data.id);
 					setSessionId(res.data.sessionId);
 					setInputDisabled(false);
