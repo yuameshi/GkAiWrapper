@@ -1,4 +1,4 @@
-export interface GetLoginQrCodeResponse {
+export interface GetLoginVerificationCodeResponse {
 	code: number;
 	level: any;
 	msg: string;
