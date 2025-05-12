@@ -1,12 +1,12 @@
 import type {CreateSessionResponse} from '../types/create-session';
-import {TOKEN} from '../../credentials';
+import {getToken} from '../store/token';
 
 export const createSession = async (): Promise<CreateSessionResponse> => {
 	const response = await fetch(
 		'https://portal.gdust.edu.cn/smart-admin-api/app/aiChat/createSession',
 		{
 			headers: {
-				token: TOKEN,
+				token: (await getToken()) || '',
 				Referer: 'https://portal.gdust.edu.cn/',
 			},
 			body: null,

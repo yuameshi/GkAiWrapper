@@ -1,4 +1,4 @@
-import {TOKEN} from '../../credentials';
+import {getToken} from '../store/token';
 import type {ChatResponse} from '../types/chat';
 
 export const chat = async (
@@ -11,7 +11,7 @@ export const chat = async (
 		{
 			headers: {
 				'Content-Type': 'application/json',
-				token: TOKEN,
+				token: (await getToken()) || '',
 				Referer: 'https://portal.gdust.edu.cn/',
 				'Referrer-Policy': 'strict-origin-when-cross-origin',
 			},
