@@ -1,4 +1,4 @@
-# GkAiWrapper
+# Gk AI Wrapper
 
 ## Tech Stack:
 
