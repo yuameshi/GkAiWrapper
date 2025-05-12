@@ -3,7 +3,7 @@ import {Session} from '../components/Response';
 import {UserPrompt} from '../components/UserPrompt';
 import {InputBox} from '../components/InputBox';
 import {type FC, useEffect, useRef, useState} from 'react';
-import {chat} from '../api/chat';
+import {chat} from '../api/chat-sse';
 import {getTime} from '../utils/getTime';
 
 type Message = {
@@ -50,42 +50,54 @@ export const Main: FC<MainPageProps> = ({id, sessionId}) => {
 			},
 		]);
 		const loadStartTime = getTime();
-		const timer = setInterval(() => {
-			setActiveMessage({
-				content: '请稍后...',
-				seconds: Math.floor((Date.now() - (loadStartTime || 0)) / 1000),
-				thoughts: '正在思考...',
-				sender: 'assistant',
-			});
-		}, 1000);
-		chat(id, sessionId, value)
-			.then(msg => {
+		chat(
+			id,
+			sessionId,
+			value,
+			msg => {
+				if (msg.output.finish_reason === 'stop') {
+					setActiveMessage(null);
+					setMessages(prev => [
+						...prev,
+						{
+							content: msg.output.text,
+							seconds: Math.floor(
+								(getTime() - (loadStartTime || 0)) / 1000,
+							),
+							thoughts: msg.output.thoughts.find(
+								t => t.action_type === 'reasoning',
+							)?.response,
+							sender: 'assistant',
+						},
+					]);
+					setInputDisabled(false);
+					setLoading(false);
+					scrollViewRef.current?.scrollToEnd({animated: true});
+					return;
+				}
+				setActiveMessage({
+					content: msg.output.text,
+					seconds: Math.floor(
+						(getTime() - (loadStartTime || 0)) / 1000,
+					),
+					thoughts: msg.output.thoughts.find(
+						t => t.action_type === 'reasoning',
+					)?.response,
+					sender: 'assistant',
+				});
+			},
+			() => {
+				if (activeMessage) {
+					setMessages(prev => [...prev, activeMessage]);
+				}
 				setActiveMessage(null);
-				setMessages(prev => [
-					...prev,
-					{
-						content: msg.output.text,
-						seconds: Math.floor(
-							(getTime() - (loadStartTime || 0)) / 1000,
-						),
-						thoughts: msg.output.thoughts.find(
-							t => t.action_type === 'reasoning',
-						)?.response,
-						sender: 'assistant',
-					},
-				]);
-			})
-			.catch(error => {
-				console.error('Error:', error);
-				Alert.alert('发生错误', error);
 				setLoading(false);
-			})
-			.finally(() => {
 				setInputDisabled(false);
 				setLoading(false);
-				clearInterval(timer);
+				Alert.alert('发生错误', '请稍后再试');
 				scrollViewRef.current?.scrollToEnd({animated: true});
-			});
+			},
+		);
 	};
 
 	return (
