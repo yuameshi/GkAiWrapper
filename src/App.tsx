@@ -4,9 +4,9 @@ import {UserPrompt} from './components/UserPrompt';
 import {InputBox} from './components/InputBox';
 import {useEffect, useState} from 'react';
 import {createSession} from './api/create-session';
+import {chat} from './api/chat';
 
 type Message = {
-	id: number;
 	content: string;
 	thoughts?: string;
 	seconds?: number;
@@ -19,6 +19,8 @@ function App() {
 	const [sessionId, setSessionId] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [messages, setMessages] = useState<Message[]>([]);
+	const [activeMessage, setActiveMessage] = useState<Message | null>(null);
+	const [loadStartTime, setLoadStartTime] = useState<number | null>(null);
 
 	useEffect(() => {
 		createSession()
@@ -50,7 +52,9 @@ function App() {
 			Alert.alert('会话未创建', '请稍后再试');
 			return;
 		}
+		setInputDisabled(true);
 		setLoading(true);
+		setLoadStartTime(Date.now());
 		setMessages(prev => [
 			...prev,
 			{
@@ -59,21 +63,41 @@ function App() {
 				sender: 'user',
 			},
 		]);
-		// Simulate sending a message
-		setTimeout(() => {
-			// Simulate receiving a response
-			setMessages(prev => [
-				...prev,
-				{
-					id: id,
-					content: '这是一个模拟的响应',
-					thoughts: '思考内容',
-					seconds: 2,
-					sender: 'assistant',
-				},
-			]);
-			setLoading(false);
-		}, 2000);
+		const timer = setInterval(() => {
+			setActiveMessage({
+				content: '请稍后...',
+				seconds: Math.floor((Date.now() - (loadStartTime || 0)) / 1000),
+				thoughts: '正在思考...',
+				sender: 'assistant',
+			});
+		}, 1000);
+		chat(id, sessionId, value)
+			.then(msg => {
+				setActiveMessage(null);
+				setMessages(prev => [
+					...prev,
+					{
+						content: msg.output.text,
+						seconds: Math.floor(
+							(Date.now() - (loadStartTime || 0)) / 1000,
+						),
+						thoughts: msg.output.thoughts.find(
+							t => t.action_type === 'reasoning',
+						)?.response,
+						sender: 'assistant',
+					},
+				]);
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				Alert.alert('发生错误', error);
+				setLoading(false);
+			})
+			.finally(() => {
+				setInputDisabled(false);
+				setLoading(false);
+				clearInterval(timer);
+			});
 	};
 
 	return (
@@ -93,6 +117,16 @@ function App() {
 						)}
 					</View>
 				))}
+				<View>
+					{loading && (
+						<Session
+							content={activeMessage?.content || ''}
+							thoughts={activeMessage?.thoughts || ''}
+							seconds={activeMessage?.seconds || 0}
+							loading={true}
+						/>
+					)}
+				</View>
 			</ScrollView>
 			<InputBox disabled={inputDisabled} onSubmit={handleSubmit} />
 		</View>
