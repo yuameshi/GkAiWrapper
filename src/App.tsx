@@ -2,7 +2,7 @@ import {Alert, ScrollView, StyleSheet, View} from 'react-native';
 import {Session} from './components/Response';
 import {UserPrompt} from './components/UserPrompt';
 import {InputBox} from './components/InputBox';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {createSession} from './api/create-session';
 import {chat} from './api/chat';
 import {getTime} from './utils/getTime';
@@ -21,6 +21,7 @@ function App() {
 	const [loading, setLoading] = useState(false);
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [activeMessage, setActiveMessage] = useState<Message | null>(null);
+	const scrollViewRef = useRef<ScrollView>(null);
 
 	useEffect(() => {
 		createSession()
@@ -99,12 +100,13 @@ function App() {
 				setInputDisabled(false);
 				setLoading(false);
 				clearInterval(timer);
+				scrollViewRef.current?.scrollToEnd({animated: true});
 			});
 	};
 
 	return (
 		<View style={[styles.root]}>
-			<ScrollView style={styles.scrollView}>
+			<ScrollView style={styles.scrollView} ref={scrollViewRef}>
 				{messages.map((msg, index) => (
 					<View key={index}>
 						{msg.sender === 'user' ? (
@@ -140,6 +142,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
+		backgroundColor: '#242424',
 	},
 	scrollView: {
 		flexShrink: 1,
