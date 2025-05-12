@@ -1,4 +1,4 @@
-package com.gkaiwrapper
+package top.yuameshi.gk.ai.wrapper
 
 import android.app.Application
 import com.facebook.react.PackageList

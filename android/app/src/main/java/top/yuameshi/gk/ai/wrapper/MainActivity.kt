@@ -1,4 +1,4 @@
-package com.gkaiwrapper
+package top.yuameshi.gk.ai.wrapper
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
