@@ -42,8 +42,6 @@ export const Main: FC<MainPageProps> = ({id, sessionId}) => {
 		]);
 		const loadStartTime = getTime();
 		const timer = setInterval(() => {
-			console.log('now', getTime());
-			console.log('delta', getTime() - (loadStartTime || 0));
 			setActiveMessage({
 				content: '请稍后...',
 				seconds: Math.floor((Date.now() - (loadStartTime || 0)) / 1000),
