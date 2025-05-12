@@ -1,10 +1,10 @@
-import {Alert, ScrollView, StyleSheet, View} from 'react-native';
-import {Session} from '../components/Response';
-import {UserPrompt} from '../components/UserPrompt';
-import {InputBox} from '../components/InputBox';
-import {type FC, useEffect, useRef, useState} from 'react';
-import {chat} from '../api/chat-sse';
-import {getTime} from '../utils/getTime';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Session } from '../components/Response';
+import { UserPrompt } from '../components/UserPrompt';
+import { InputBox } from '../components/InputBox';
+import { type FC, useEffect, useRef, useState } from 'react';
+import { chat } from '../api/chat-sse';
+import { getTime } from '../utils/getTime';
 
 type Message = {
 	content: string;
@@ -18,7 +18,7 @@ type MainPageProps = {
 	sessionId: string;
 };
 
-export const Main: FC<MainPageProps> = ({id, sessionId}) => {
+export const Main: FC<MainPageProps> = ({ id, sessionId }) => {
 	const [inputDisabled, setInputDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [messages, setMessages] = useState<Message[]>([]);
@@ -72,7 +72,7 @@ export const Main: FC<MainPageProps> = ({id, sessionId}) => {
 					]);
 					setInputDisabled(false);
 					setLoading(false);
-					scrollViewRef.current?.scrollToEnd({animated: true});
+					scrollViewRef.current?.scrollToEnd({ animated: true });
 					return;
 				}
 				setActiveMessage({
@@ -95,7 +95,7 @@ export const Main: FC<MainPageProps> = ({id, sessionId}) => {
 				setInputDisabled(false);
 				setLoading(false);
 				Alert.alert('发生错误', '请稍后再试');
-				scrollViewRef.current?.scrollToEnd({animated: true});
+				scrollViewRef.current?.scrollToEnd({ animated: true });
 			},
 		);
 	};

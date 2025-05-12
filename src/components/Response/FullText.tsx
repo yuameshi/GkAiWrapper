@@ -1,11 +1,11 @@
-import type {FC} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import type { FC } from 'react';
+import { StyleSheet, Text } from 'react-native';
 
 type ResponseFullTextProps = {
 	content: string;
 };
 
-export const ResponseFullText: FC<ResponseFullTextProps> = ({content}) => {
+export const ResponseFullText: FC<ResponseFullTextProps> = ({ content }) => {
 	return content ? (
 		<Text selectable style={styles.text}>
 			{content}

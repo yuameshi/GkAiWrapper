@@ -1,4 +1,4 @@
-import {CheckPasswordApiResponse} from '../../types/check-password';
+import type { CheckPasswordApiResponse } from '../../types/check-password';
 
 export const CheckPasswordApi = async (ticket: string) => {
 	const response = await fetch(

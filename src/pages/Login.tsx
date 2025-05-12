@@ -16,16 +16,16 @@ import {
 } from 'react-native';
 import EventSource from 'react-native-sse';
 import qrcode from 'qrcode-generator';
-import {CheckPasswordApi} from '../api/login/check-password';
-import {CheckTicketApi} from '../api/login/check-ticket';
-import {LoginQrCodeApi} from '../api/login/login-qrcode';
-import {setToken as setStoredToken} from '../store/token';
+import { CheckPasswordApi } from '../api/login/check-password';
+import { CheckTicketApi } from '../api/login/check-ticket';
+import { LoginQrCodeApi } from '../api/login/login-qrcode';
+import { setToken as setStoredToken } from '../store/token';
 
 type LoginPageProps = {
 	setToken: Dispatch<SetStateAction<string | null>>;
 };
 
-export const Login: FC<LoginPageProps> = ({setToken}) => {
+export const Login: FC<LoginPageProps> = ({ setToken }) => {
 	const [client, setClient] = useState<string | null>(null);
 	const [qrCode, setQrCode] = useState<string | null>(null);
 	const [ticket, setTicket] = useState<string | null>(null);
@@ -116,7 +116,7 @@ export const Login: FC<LoginPageProps> = ({setToken}) => {
 			{qrCode ? (
 				<>
 					<Image
-						source={{uri: qrCode || '', height: 256, width: 256}}
+						source={{ uri: qrCode || '', height: 256, width: 256 }}
 					/>
 					<Text style={styles.text}>请使用钉钉客户端扫码</Text>
 					<Button

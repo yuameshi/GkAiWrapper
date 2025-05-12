@@ -1,5 +1,5 @@
-import type {CreateSessionResponse} from '../types/create-session';
-import {getToken} from '../store/token';
+import type { CreateSessionResponse } from '../types/create-session';
+import { getToken } from '../store/token';
 
 export const createSession = async (): Promise<CreateSessionResponse> => {
 	const response = await fetch(

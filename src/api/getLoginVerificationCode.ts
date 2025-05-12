@@ -1,4 +1,4 @@
-import {GetLoginVerificationCodeResponse} from '../types/getLoginVerificationCode';
+import type { GetLoginVerificationCodeResponse } from '../types/getLoginVerificationCode';
 
 export const getLoginQrCode = async () => {
 	const response = await fetch(

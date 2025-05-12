@@ -1,4 +1,4 @@
-import {type FC, useState} from 'react';
+import { type FC, useState } from 'react';
 import {
 	ActivityIndicator,
 	StyleSheet,
@@ -13,7 +13,7 @@ type ThoughtsProps = {
 	thoughts: string;
 };
 
-export const Thoughts: FC<ThoughtsProps> = ({seconds, thoughts, loading}) => {
+export const Thoughts: FC<ThoughtsProps> = ({ seconds, thoughts, loading }) => {
 	const [expanded, setExpanded] = useState(false);
 
 	const toggleExpanded = () => setExpanded(!expanded);

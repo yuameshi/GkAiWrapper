@@ -1,4 +1,4 @@
-import {LoginQrCodeApiResponse} from '../../types/login-qrcode';
+import type { LoginQrCodeApiResponse } from '../../types/login-qrcode';
 
 export const LoginQrCodeApi = async (code: string) => {
 	const response = await fetch(

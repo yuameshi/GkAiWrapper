@@ -1,5 +1,5 @@
-import {getToken} from '../store/token';
-import type {ChatResponse} from '../types/chat';
+import { getToken } from '../store/token';
+import type { ChatResponse } from '../types/chat';
 
 export const chat = async (
 	id: number,

@@ -1,11 +1,11 @@
-import type {FC} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import type { FC } from 'react';
+import { StyleSheet, Text } from 'react-native';
 
 type UserPromptProps = {
 	content: string;
 };
 
-export const UserPrompt: FC<UserPromptProps> = ({content}) => {
+export const UserPrompt: FC<UserPromptProps> = ({ content }) => {
 	return (
 		<Text selectable style={styles.text}>
 			{content}

@@ -1,4 +1,4 @@
-import {type FC, useState} from 'react';
+import { type FC, useState } from 'react';
 import {
 	StyleSheet,
 	Text,
@@ -12,7 +12,7 @@ type TextInputProps = {
 	onSubmit: (value: string) => void;
 };
 
-export const InputBox: FC<TextInputProps> = ({disabled, onSubmit}) => {
+export const InputBox: FC<TextInputProps> = ({ disabled, onSubmit }) => {
 	const [value, setValue] = useState<string>('');
 	const disabledInternal = disabled || !value.trim();
 

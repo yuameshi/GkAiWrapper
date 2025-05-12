@@ -1,9 +1,9 @@
-import {Alert} from 'react-native';
-import {useEffect, useState} from 'react';
-import {createSession} from './api/create-session';
-import {Main} from './pages/Main';
-import {getToken, setToken as setStoredToken} from './store/token';
-import {Login} from './pages/Login';
+import { Alert } from 'react-native';
+import { useEffect, useState } from 'react';
+import { createSession } from './api/create-session';
+import { Main } from './pages/Main';
+import { getToken, setToken as setStoredToken } from './store/token';
+import { Login } from './pages/Login';
 
 function App() {
 	const [id, setId] = useState<number | null>(null);

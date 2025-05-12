@@ -1,7 +1,7 @@
-import {StyleSheet, View} from 'react-native';
-import {Thoughts} from './Thoughts';
-import {ResponseFullText} from './FullText';
-import {FC} from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Thoughts } from './Thoughts';
+import { ResponseFullText } from './FullText';
+import type { FC } from 'react';
 
 type ResponseProps = {
 	loading: boolean;
