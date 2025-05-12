@@ -10,6 +10,10 @@ import {
 } from 'react-native';
 import EventSource from 'react-native-sse';
 import qrcode from 'qrcode-generator';
+import {CheckPasswordApi} from '../api/login/check-password';
+import {CheckTicketApi} from '../api/login/check-ticket';
+import {LoginQrCodeApi} from '../api/login/login-qrcode';
+import {setToken as setStoredToken} from '../store/token';
 
 export const Login = () => {
 	const [client, setClient] = useState<string | null>(null);
@@ -49,6 +53,27 @@ export const Login = () => {
 			}
 		};
 	}, []);
+
+	useEffect(() => {
+		if (!ticket) {
+			return;
+		}
+		CheckPasswordApi(ticket)
+			.then(() => CheckTicketApi(ticket))
+			.then(() => LoginQrCodeApi(ticket))
+			.then(token => {
+				console.log('Login success: ', token.slice(0, 10) + '...');
+				setStoredToken(token);
+			})
+			.catch(err => {
+				console.error('Login error:', err);
+				Alert.alert(
+					'登录失败',
+					err.message || '请检查网络连接或稍后再试。',
+				);
+			});
+		return;
+	}, [ticket]);
 
 	useEffect(() => {
 		if (!client) {
