@@ -1,27 +1,11 @@
-import {Alert, ScrollView, StyleSheet, View} from 'react-native';
-import {Session} from './components/Response';
-import {UserPrompt} from './components/UserPrompt';
-import {InputBox} from './components/InputBox';
-import {useEffect, useRef, useState} from 'react';
+import {Alert} from 'react-native';
+import {useEffect, useState} from 'react';
 import {createSession} from './api/create-session';
-import {chat} from './api/chat';
-import {getTime} from './utils/getTime';
-
-type Message = {
-	content: string;
-	thoughts?: string;
-	seconds?: number;
-	sender: 'user' | 'assistant';
-};
+import {Main} from './pages/Main';
 
 function App() {
-	const [inputDisabled, setInputDisabled] = useState(true);
 	const [id, setId] = useState<number | null>(null);
 	const [sessionId, setSessionId] = useState<string | null>(null);
-	const [loading, setLoading] = useState(false);
-	const [messages, setMessages] = useState<Message[]>([]);
-	const [activeMessage, setActiveMessage] = useState<Message | null>(null);
-	const scrollViewRef = useRef<ScrollView>(null);
 
 	useEffect(() => {
 		createSession()
@@ -34,121 +18,18 @@ function App() {
 					);
 					setId(res.data.id);
 					setSessionId(res.data.sessionId);
-					setInputDisabled(false);
 				} else {
 					console.error('Failed to create session:', res.msg);
 					Alert.alert('创建会话失败', res.msg);
-					setInputDisabled(true);
 				}
 			})
 			.catch(err => {
 				console.error('Error creating session:', err);
 				Alert.alert('创建会话失败', '网络错误，请稍后再试');
-				setInputDisabled(true);
 			});
 	}, []);
 
-	const handleSubmit = (value: string) => {
-		if (!id || !sessionId) {
-			Alert.alert('会话未创建', '请稍后再试');
-			return;
-		}
-		setInputDisabled(true);
-		setLoading(true);
-		setMessages(prev => [
-			...prev,
-			{
-				id: id,
-				content: value,
-				sender: 'user',
-			},
-		]);
-		const loadStartTime = getTime();
-		const timer = setInterval(() => {
-			console.log('now', getTime());
-			console.log('delta', getTime() - (loadStartTime || 0));
-			setActiveMessage({
-				content: '请稍后...',
-				seconds: Math.floor((Date.now() - (loadStartTime || 0)) / 1000),
-				thoughts: '正在思考...',
-				sender: 'assistant',
-			});
-		}, 1000);
-		chat(id, sessionId, value)
-			.then(msg => {
-				setActiveMessage(null);
-				setMessages(prev => [
-					...prev,
-					{
-						content: msg.output.text,
-						seconds: Math.floor(
-							(getTime() - (loadStartTime || 0)) / 1000,
-						),
-						thoughts: msg.output.thoughts.find(
-							t => t.action_type === 'reasoning',
-						)?.response,
-						sender: 'assistant',
-					},
-				]);
-			})
-			.catch(error => {
-				console.error('Error:', error);
-				Alert.alert('发生错误', error);
-				setLoading(false);
-			})
-			.finally(() => {
-				setInputDisabled(false);
-				setLoading(false);
-				clearInterval(timer);
-				scrollViewRef.current?.scrollToEnd({animated: true});
-			});
-	};
-
-	return (
-		<View style={[styles.root]}>
-			<ScrollView style={styles.scrollView} ref={scrollViewRef}>
-				{messages.map((msg, index) => (
-					<View key={index}>
-						{msg.sender === 'user' ? (
-							<UserPrompt content={msg.content} />
-						) : (
-							<Session
-								content={msg.content}
-								thoughts={msg.thoughts || ''}
-								seconds={msg.seconds || 0}
-								loading={false}
-							/>
-						)}
-					</View>
-				))}
-				<View>
-					{loading && (
-						<Session
-							content={activeMessage?.content || ''}
-							thoughts={activeMessage?.thoughts || ''}
-							seconds={activeMessage?.seconds || 0}
-							loading={true}
-						/>
-					)}
-				</View>
-			</ScrollView>
-			<InputBox disabled={inputDisabled} onSubmit={handleSubmit} />
-		</View>
-	);
+	return id && sessionId ? <Main id={id} sessionId={sessionId} /> : <></>;
 }
-
-const styles = StyleSheet.create({
-	root: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: '#242424',
-	},
-	scrollView: {
-		flexShrink: 1,
-		width: '100%',
-		paddingHorizontal: 16,
-	},
-});
 
 export default App;
