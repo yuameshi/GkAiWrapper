@@ -6,10 +6,12 @@ type ResponseFullTextProps = {
 };
 
 export const ResponseFullText: FC<ResponseFullTextProps> = ({content}) => {
-	return (
+	return content ? (
 		<Text selectable style={styles.text}>
 			{content}
 		</Text>
+	) : (
+		<></>
 	);
 };
 
