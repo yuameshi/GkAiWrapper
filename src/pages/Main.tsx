@@ -5,6 +5,10 @@ import { InputBox } from '../components/InputBox';
 import { type FC, useEffect, useRef, useState } from 'react';
 import { chat } from '../api/chat-sse';
 import { getTime } from '../utils/getTime';
+import { ModalSwitch } from '../components/ModelSwitch';
+import { models } from '../components/ModelSwitch/models';
+import { ModelContext } from '../contexts/modelContext';
+import { useUpdateEffect } from '../hooks/useUpdateEffect';
 
 type Message = {
 	content: string;
@@ -16,14 +20,16 @@ type Message = {
 type MainPageProps = {
 	id: number;
 	sessionId: string;
+	refreshSession: () => Promise<void>;
 };
 
-export const Main: FC<MainPageProps> = ({ id, sessionId }) => {
+export const Main: FC<MainPageProps> = ({ id, sessionId, refreshSession }) => {
 	const [inputDisabled, setInputDisabled] = useState(true);
 	const [loading, setLoading] = useState(false);
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [activeMessage, setActiveMessage] = useState<Message | null>(null);
 	const scrollViewRef = useRef<ScrollView>(null);
+	const [model, setModel] = useState(models[1]);
 
 	useEffect(() => {
 		if (!id || !sessionId) {
@@ -33,6 +39,19 @@ export const Main: FC<MainPageProps> = ({ id, sessionId }) => {
 			setInputDisabled(false);
 		}
 	}, [id, sessionId]);
+
+	useUpdateEffect(() => {
+		if (!refreshSession) {
+			return;
+		}
+		console.log('Model changed:', model);
+		setInputDisabled(true);
+		refreshSession().then(() => {
+			setInputDisabled(false);
+			setActiveMessage(null);
+			setMessages([]);
+		});
+	}, [model]);
 
 	const handleSubmit = (value: string) => {
 		if (!id || !sessionId) {
@@ -53,6 +72,7 @@ export const Main: FC<MainPageProps> = ({ id, sessionId }) => {
 		chat(
 			id,
 			sessionId,
+			model.id,
 			value,
 			msg => {
 				if (msg.output.finish_reason === 'stop') {
@@ -102,6 +122,9 @@ export const Main: FC<MainPageProps> = ({ id, sessionId }) => {
 
 	return (
 		<View style={[styles.root]}>
+			<ModelContext.Provider value={{ model, setModel }}>
+				<ModalSwitch />
+			</ModelContext.Provider>
 			<ScrollView style={styles.scrollView} ref={scrollViewRef}>
 				{messages.map((msg, index) => (
 					<View key={index}>

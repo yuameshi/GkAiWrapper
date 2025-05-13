@@ -5,6 +5,7 @@ import EventSource from 'react-native-sse';
 export const chat = async (
 	id: number,
 	sessionId: string,
+	model: number,
 	content: string,
 	onMsg: (msg: ChatResponse) => any,
 	onError: (error: Error) => any,
@@ -22,7 +23,7 @@ export const chat = async (
 				id: id,
 				question: content,
 				sessionId: sessionId,
-				model: 2,
+				model: model,
 			}),
 			method: 'POST',
 		},

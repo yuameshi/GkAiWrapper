@@ -18,6 +18,31 @@ function App() {
 		});
 	}, []);
 
+	const refreshSession = async () => {
+		if (!token) {
+			return;
+		}
+		try {
+			const response = await createSession();
+			if (response.code === 1) {
+				console.log(
+					'Session refreshed:',
+					response.data.id,
+					response.data.sessionId,
+				);
+				setId(response.data.id);
+				setSessionId(response.data.sessionId);
+				setStoredToken(token);
+			} else {
+				console.error('Failed to refresh session:', response.msg);
+				Alert.alert('创建会话失败', response.msg);
+			}
+		} catch (error) {
+			console.error('Error creating session:', error);
+			Alert.alert('创建会话失败', '网络错误，请稍后再试');
+		}
+	};
+
 	useEffect(() => {
 		if (!token) {
 			return;
@@ -45,7 +70,7 @@ function App() {
 	}, [token]);
 
 	return id && sessionId ? (
-		<Main id={id} sessionId={sessionId} />
+		<Main id={id} sessionId={sessionId} refreshSession={refreshSession} />
 	) : (
 		<Login setToken={setToken} />
 	);
