@@ -1,4 +1,4 @@
-import { Alert } from 'react-native';
+import { Alert, Platform, SafeAreaView, StatusBar, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { createSession } from './api/create-session';
 import { Main } from './pages/Main';
@@ -51,4 +51,27 @@ function App() {
 	);
 }
 
-export default App;
+export default function AppWrapper() {
+	const OS = Platform.OS;
+	if (OS === 'ios') {
+		return (
+			<SafeAreaView>
+				<App />
+			</SafeAreaView>
+		);
+	} else if (OS === 'android') {
+		return (
+			<>
+				<StatusBar
+					translucent={true}
+					backgroundColor="transparent"
+					barStyle="dark-content"
+				/>
+				<View style={{ height: StatusBar.currentHeight }} />
+				<App />
+			</>
+		);
+	} else {
+		return <App />;
+	}
+}
