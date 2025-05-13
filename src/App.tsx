@@ -1,4 +1,11 @@
-import { Alert, Platform, SafeAreaView, StatusBar, View } from 'react-native';
+import {
+	Alert,
+	Platform,
+	SafeAreaView,
+	StatusBar,
+	StyleSheet,
+	View,
+} from 'react-native';
 import { useEffect, useState } from 'react';
 import { createSession } from './api/create-session';
 import { Main } from './pages/Main';
@@ -78,6 +85,11 @@ function App() {
 
 export default function AppWrapper() {
 	const OS = Platform.OS;
+	const styles = StyleSheet.create({
+		statusBar: {
+			backgroundColor: '#242424',
+		},
+	});
 	if (OS === 'ios') {
 		return (
 			<SafeAreaView>
@@ -92,7 +104,12 @@ export default function AppWrapper() {
 					backgroundColor="transparent"
 					barStyle="dark-content"
 				/>
-				<View style={{ height: StatusBar.currentHeight }} />
+				<View
+					style={[
+						{ height: StatusBar.currentHeight },
+						styles.statusBar,
+					]}
+				/>
 				<App />
 			</>
 		);
