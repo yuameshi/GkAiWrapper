@@ -4,7 +4,7 @@ import { SwitchModelModal } from './Modal';
 import { ModelContext } from '../../contexts/modelContext';
 
 export const ModalSwitch = () => {
-	const [visible, setVisible] = useState(true);
+	const [visible, setVisible] = useState(false);
 	const { model } = useContext(ModelContext);
 
 	return (
