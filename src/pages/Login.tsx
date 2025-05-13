@@ -104,10 +104,17 @@ export const Login: FC<LoginPageProps> = ({ setToken }) => {
 		if (!client) {
 			return;
 		}
+		const url = encodeURIComponent(
+			'https://cas.gdust.edu.cn/cas/mobieAuth?clientId=' + client,
+		);
+		const mobileUrl = `dingtalk://dingtalkclient/page/link?url=${url}`;
+		const pcUrl = `dingtalk://dingtalkclient/page/link?popup_wnd=true&url=${url}&title=${encodeURIComponent(
+			'继续在 广科 AI 中操作',
+		)}`;
 		Linking.openURL(
-			`dingtalk://dingtalkclient/page/link?url=${encodeURIComponent(
-				'https://cas.gdust.edu.cn/cas/mobieAuth?clientId=' + client,
-			)}`,
+			`dingtalk://dingtalkclient/action/open_platform_link?pcLink=${encodeURIComponent(
+				pcUrl,
+			)}&mobileLink=${encodeURIComponent(mobileUrl)}`,
 		);
 	};
 
