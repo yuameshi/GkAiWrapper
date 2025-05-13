@@ -133,7 +133,7 @@ export const Login: FC<LoginPageProps> = ({ setToken }) => {
 					/>
 				</>
 			) : (
-				<Text style={styles.text}>请稍后……</Text>
+				<Text style={styles.text}>请稍候……</Text>
 			)}
 		</View>
 	);
